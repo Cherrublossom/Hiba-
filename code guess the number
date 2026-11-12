@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define MIN 1
+#define MAX 100
+#define MAX_ATTEMPTS 10
+#define DEBUG 0   /* change to 1 to see the secret number while testing */
+
+int main(void)
+{
+    int number, guess = 0, attempts;
+    int result;
+    char again;
+
+    srand((unsigned)time(0));
+
+    do
+    {
+        number = (rand() % (MAX - MIN + 1)) + MIN;
+        guess = 0;
+        attempts = 0;
+
+        printf("\n=== NUMBER GUESSING GAME ===\n");
+        printf("I'm thinking of a number between %d and %d.\n", MIN, MAX);
+        printf("You have %d attempts.\n\n", MAX_ATTEMPTS);
+
+        if (DEBUG)
+        {
+            printf("DEBUG: secret number is %d\n\n", number);
+        }
+
+        while (attempts < MAX_ATTEMPTS)
+        {
+            printf("Attempt %d - enter your guess: ", attempts + 1);
+            result = scanf("%d", &guess);
+
+            if (result != 1)
+            {
+                printf("Please enter a valid number.\n");
+                while (getchar() != '\n');
+                guess = 0;
+                continue;
+            }
+
+            if (guess < MIN || guess > MAX)
+            {
+                printf("Stay between %d and %d.\n", MIN, MAX);
+                continue;
+            }
+
+            attempts++;
+
+            if (guess > number)
+            {
+                printf("Too high!\n");
+            }
+            else if (guess < number)
+            {
+                printf("Too low!\n");
+            }
+            else
+            {
+                printf("\nCorrect! You guessed it in %d attempt(s).\n", attempts);
+                break;
+            }
+        }
+
+        if (guess != number)
+        {
+            printf("\nOut of attempts! The number was %d.\n", number);
+        }
+
+        printf("\nPlay again? (y/n): ");
+        scanf(" %c", &again);
+
+    } while (again == 'y' || again == 'Y');
+
+    printf("Thanks for playing!\n");
+    return 0;
+}
